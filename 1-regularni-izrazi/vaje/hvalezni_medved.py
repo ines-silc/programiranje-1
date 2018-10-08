@@ -25,7 +25,13 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # >>> find_words(test_text, 'de')
 # {'izdere', 'debel', 'oddide', 'začudeno'}
 ###############################################################################
-
+def find_words(tekst, podniz):
+    mnozica = set()
+    seznam = tekst.split()
+    for x in seznam:
+        if podniz in x:
+            mnozica.add(x)
+    return mnozica
 
 ###############################################################################
 # 2) Sestavite funkcijo [find_prefix], ki vrne množico vseh besed, ki se
@@ -34,7 +40,14 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # >>> find_prefix(test_text, 'zi')
 # {'zibala', 'zibel', 'zibelko'}
 ###############################################################################
-
+import re
+def find_prefix(tekst, x):
+    m = set()
+    vzorec = r'\b' + x + r'\w*'
+    match = re.findall(vzorec, tekst)
+    for x in match:
+        m.add(x)
+    return m
 
 ###############################################################################
 # 3) Sestavite funkcijo [find_suffix], ki vrne množico vseh besed, ki se
@@ -43,7 +56,13 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # >>> find_suffix(test_text, 'la')
 # {'zibala', 'razveselila', 'prestrašila', 'šivala', 'opazila', 'tla'}
 ###############################################################################
-
+def find_suffix(tekst, x):
+    m = set()
+    vzorec = r'\w+' + x
+    match = re.findall(vzorec, tekst)
+    for x in match:
+        m.add(x)
+    return m
 
 ###############################################################################
 # 4) Sestavite funkcijo [double_letters], ki sprejme niz in vrne množico vseh
@@ -52,3 +71,10 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # >>> double_letters('A volunteer is worth twenty pressed men.')
 # {'volunteer', 'pressed'}
 ###############################################################################
+def double_letters(niz):
+    m = set()
+    vzorec = r'\b(\w)\1'
+    match = re.findall(vzorec, niz)
+    for x in match:
+        m.add(x)
+    return m
