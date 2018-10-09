@@ -73,8 +73,8 @@ def find_suffix(tekst, x):
 ###############################################################################
 def double_letters(niz):
     m = set()
-    vzorec = r'\b(\w)\1'
+    vzorec = r"(\b\w*(\w)\2\w*\b)"
     match = re.findall(vzorec, niz)
     for x in match:
-        m.add(x)
+        m.add(x[0])
     return m
