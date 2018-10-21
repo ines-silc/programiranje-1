@@ -79,29 +79,42 @@ def read_file_to_string(directory, filename):
 # oglasa. Funkcija naj vrne seznam nizov.
 
 
-def page_to_ads(datoteka):
+def page_to_ads(directory, datoteka):
     '''Split "page" to a list of advertisement blocks.'''
-    vzorec = '<div class ="ad">(?P<ad>.+?)</div>*?'
-    match = re.findall(vzorec, datoteka)
+    vsebina = read_file_to_string(directory, datoteka)
+    match = []
+    vzorec = r'<div class="ad.*?">' + r'.*?' + r'<div class="clear"></div>'
+    for ujemanje in re.finditer(vzorec, vsebina, re.DOTALL):
+        nas_oglas = ujemanje.group(0)
+        match.append(nas_oglas)
     return match
+
+page_to_ads("cat_data", "frontpage.html")
 
 # Definirajte funkcijo, ki sprejme niz, ki predstavlja oglas, in izlušči
 # podatke o imenu, ceni in opisu v oglasu.
+def izloci(oglas):
+    return None
 
-
-def get_dict_from_ad_block(TODO):
+def get_dict_from_ad_block(directory, datoteka):
     '''Build a dictionary containing the name, description and price
     of an ad block.'''
-    return TODO
+    podatki = []
+    seznam = page_to_ads(directory, datoteka)
+    for oglas in seznam:
+        for ujemanje in vzorec.finditer(oglas):
+            podatki.append(izloci(ujemanje))
+    return podatki
 
 # Definirajte funkcijo, ki sprejme ime in lokacijo datoteke, ki vsebuje
 # besedilo spletne strani, in vrne seznam slovarjev, ki vsebujejo podatke o
 # vseh oglasih strani.
 
 
-def ads_from_file(TODO):
+def ads_from_file(directory, datoteka):
     '''Parse the ads in filename/directory into a dictionary list.'''
-    return TODO
+    oglasi = get_dict_from_ad_block(directory, datoteka)
+    return oglasi
 
 ###############################################################################
 # Obdelane podatke želimo sedaj shraniti.
