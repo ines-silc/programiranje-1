@@ -25,13 +25,12 @@ def download_url_to_string(url):
         r = requests.get(url)
     except requests.exceptions.ConnectionError:
         # koda, ki se izvede pri napaki
-        print('stran ne obstaja!')
+        print('stran'+ url + 'ne obstaja!')
         # dovolj je če izpišemo opozorilo in prekinemo izvajanje funkcije
         return ''
     # nadaljujemo s kodo če ni prišlo do napake
     return r.text
 
-#text = download_url_to_string(cats_frontpage_url)
 
 def save_string_to_file(text, directory, filename):
     '''Write "text" to the file "filename" located in directory "directory",
@@ -39,28 +38,17 @@ def save_string_to_file(text, directory, filename):
     the current directory.'''
     os.makedirs(directory, exist_ok=True)
     path = os.path.join(directory, filename)
-    with open(filename, 'w', encoding='utf-8') as file_out:
+    with open(path, 'w', encoding='utf-8') as file_out:
         file_out.write(text)
-        print('shranjeno!')
-
-#save_string_to_file(text, 'cat_data', 'frontpage.html')
+    return None
 
 # Definirajte funkcijo, ki prenese glavno stran in jo shrani v datoteko.
 
 
-def save_frontpage(url, ime_datoteke, vsili_prenos=False):
+def save_frontpage(TODO):
     '''Save "cats_frontpage_url" to the file
     "cat_directory"/"frontpage_filename"'''
-    try:
-        r = requests.get(url)
-    except requests.exceptions.ConnectionError:
-        print('stran ne obstaja!')
-    else:
-        with open(ime_datoteke, 'w', encoding='utf-8') as datoteka:
-            datoteka.write(r.text)
-            print('shranjeno!')
-
-#save_frontpage(cats_frontpage_url, 'cat_data/frontpage.html')
+    return TODO
 
 ###############################################################################
 # Po pridobitvi podatkov jih želimo obdelati.
@@ -69,9 +57,7 @@ def save_frontpage(url, ime_datoteke, vsili_prenos=False):
 
 def read_file_to_string(directory, filename):
     '''Return the contents of the file "directory"/"filename" as a string.'''
-    with open(filename, encoding='utf-8') as datoteka:
-        return datoteka.read()
-
+    return TODO
 
 # Definirajte funkcijo, ki sprejme niz, ki predstavlja vsebino spletne strani,
 # in ga razdeli na dele, kjer vsak del predstavlja en oglas. To storite s
@@ -79,42 +65,27 @@ def read_file_to_string(directory, filename):
 # oglasa. Funkcija naj vrne seznam nizov.
 
 
-def page_to_ads(directory, datoteka):
+def page_to_ads(TODO):
     '''Split "page" to a list of advertisement blocks.'''
-    vsebina = read_file_to_string(directory, datoteka)
-    match = []
-    vzorec = r'<div class="ad.*?">' + r'.*?' + r'<div class="clear"></div>'
-    for ujemanje in re.finditer(vzorec, vsebina, re.DOTALL):
-        nas_oglas = ujemanje.group(0)
-        match.append(nas_oglas)
-    return match
-
-page_to_ads("cat_data", "frontpage.html")
+    return TODO
 
 # Definirajte funkcijo, ki sprejme niz, ki predstavlja oglas, in izlušči
 # podatke o imenu, ceni in opisu v oglasu.
-def izloci(oglas):
-    return None
 
-def get_dict_from_ad_block(directory, datoteka):
+
+def get_dict_from_ad_block(TODO):
     '''Build a dictionary containing the name, description and price
     of an ad block.'''
-    podatki = []
-    seznam = page_to_ads(directory, datoteka)
-    for oglas in seznam:
-        for ujemanje in vzorec.finditer(oglas):
-            podatki.append(izloci(ujemanje))
-    return podatki
+    return TODO
 
 # Definirajte funkcijo, ki sprejme ime in lokacijo datoteke, ki vsebuje
 # besedilo spletne strani, in vrne seznam slovarjev, ki vsebujejo podatke o
 # vseh oglasih strani.
 
 
-def ads_from_file(directory, datoteka):
+def ads_from_file(TODO):
     '''Parse the ads in filename/directory into a dictionary list.'''
-    oglasi = get_dict_from_ad_block(directory, datoteka)
-    return oglasi
+    return TODO
 
 ###############################################################################
 # Obdelane podatke želimo sedaj shraniti.
