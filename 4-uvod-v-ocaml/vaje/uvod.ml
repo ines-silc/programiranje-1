@@ -82,12 +82,10 @@ let rec divide k list =
 
 let rec delete k list =
   match k, list with
-  | k, [] -> failwith "List too short"
-  | 0, x :: xs -> xs
-  | k, list when (k < 0) -> list
-  |
+  | k, [] -> []
+  | k, x :: xs when k = 0 -> xs
+  | k, x :: xs -> [x] @ delete (k-1) xs
 
-  
 (*----------------------------------------------------------------------------*]
  Funkcija [slice i k list] sestavi nov seznam, ki vsebuje elemente seznama
  [list] od vključno [i]-tega do izključno [k]-tega. Predpostavimo, da sta [i] in
@@ -97,7 +95,12 @@ let rec delete k list =
  - : int list = [1; 2; 3]
 [*----------------------------------------------------------------------------*)
 
-let rec slice = ()
+let rec slice i k list =
+  match list with
+  | [] -> []
+  | list -> 
+    let (levi1, desni1) = divide (i) list in
+    let (levi2, desni2) = divide (k-i) desni in levi2
 
 (*----------------------------------------------------------------------------*]
  Funkcija [insert x k list] na [k]-to mesto seznama [list] vrine element [x].
