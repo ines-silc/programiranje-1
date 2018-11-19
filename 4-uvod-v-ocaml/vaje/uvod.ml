@@ -112,7 +112,13 @@ let rec slice i k list =
  - : int list = [1; 0; 0; 0; 0; 0]
 [*----------------------------------------------------------------------------*)
 
-let rec insert = ()
+(*Še nepreverjena funkcija*)
+let rec insert x k list =
+  match x, k, list with
+  |x, 0, list -> x :: list
+  |x, k, list when (k<0) -> x :: list
+  (* |x, k, [] -> ??? *)
+  |x, k, y :: ys -> y :: insert x (k-1) ys
 
 (*----------------------------------------------------------------------------*]
  Funkcija [rotate n list] seznam zavrti za [n] mest v levo. Predpostavimo, da
@@ -122,7 +128,12 @@ let rec insert = ()
  - : int list = [3; 4; 5; 1; 2]
 [*----------------------------------------------------------------------------*)
 
-let rec rotate = ()
+(*Še nepreverjena funkcija*)
+let rec rotate n list= 
+  match n, list with
+  |_, [] -> []
+  |1, x :: xs -> xs : x
+  |n, x :: xs -> rotate (n-1) xs::x
 
 (*----------------------------------------------------------------------------*]
  Funkcija [remove x list] iz seznama izbriše vse pojavitve elementa [x].
@@ -131,7 +142,11 @@ let rec rotate = ()
  - : int list = [2; 3; 2; 3]
 [*----------------------------------------------------------------------------*)
 
-let rec remove = ()
+(*Še nepreverjena funkcija*)
+let rec remove x list=
+  match x list with
+  |x, y::ys if (x = y) then ys else y :: remove x ys
+
 
 (*----------------------------------------------------------------------------*]
  Funkcija [is_palindrome] za dani seznam ugotovi ali predstavlja palindrom.
