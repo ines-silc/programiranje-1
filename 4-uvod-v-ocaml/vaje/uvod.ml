@@ -131,9 +131,9 @@ let rec insert x k list =
 (*Še nepreverjena funkcija*)
 let rec rotate n list= 
   match n, list with
-  |_, [] -> []
-  |1, x :: xs -> xs : x
-  |n, x :: xs -> rotate (n-1) xs::x
+  | _, [] -> []
+  | 1, x :: xs -> xs @ [x]
+  | n, x :: xs -> rotate (n-1) (xs :: x)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [remove x list] iz seznama izbriše vse pojavitve elementa [x].
