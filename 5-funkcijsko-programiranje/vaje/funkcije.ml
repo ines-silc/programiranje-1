@@ -4,11 +4,16 @@
 Namig: Definirajte pomožno funkcijo za obračanje seznamov.
 [*----------------------------------------------------------------------------*)
 
-let rec reverse = function
+let rec reverse_pocasna = function
   | [] -> []
   | x :: xs -> reverse xs @ [x]
 
-
+let reverse =
+  let rec aux acc = function
+    | [] -> acc
+    | x :: xs -> aux (x :: acc) xs
+  in
+  aux []
 
 (*----------------------------------------------------------------------------*]
  Funkcija [repeat x n] vrne seznam [n] ponovitev vrednosti [x]. Za neprimerne
@@ -161,13 +166,12 @@ let rec zip_enum_tlrec list1 list2 =
  - : int list * string list = ([0; 1; 2], ["a"; "b"; "c"])
 [*----------------------------------------------------------------------------*)
 
-let rec unzip list =
-  let rec unzip' acc1 acc2 list =
-    match list with
-    | [] -> (reverse(acc1), reverse(acc2))
-    | (x, y) :: lists -> unzip' (x :: acc1) (y :: acc2) lists
-  in
-  unzip' [] [] list
+let rec unzip seznam =
+  let rec unzip' acc1 acc2 seznam =
+    match seznam with
+    | [] -> (acc1 |> reverse, acc2 |> reverse)
+    |x :: xs -> unzip' (fst x :: acc1) (snd x :: acc2) xs
+in unzip' [] [] seznam
 
 (*----------------------------------------------------------------------------*]
  Funkcija [unzip_tlrec] je repno rekurzivna različica funkcije [unzip].
@@ -188,7 +192,12 @@ let rec unzip_tlrec = () (*zgornja je že repno rekurzivna*)
  - : string = "FICUS"
 [*----------------------------------------------------------------------------*)
 
-let rec fold_left_no_acc f xs = ()
+let rec fold_left_no_acc f xs =
+  match xs with
+  | [] -> failwith "List too short"
+  | x :: [] -> failwith "List too short"
+  | x :: y :: [] -> f x y
+  | x :: y :: xs -> fold_left_no_acc f ((f x y) :: xs) 
 
 (*----------------------------------------------------------------------------*]
  Funkcija [apply_sequence f x n] vrne seznam zaporednih uporab funkcije [f] na
