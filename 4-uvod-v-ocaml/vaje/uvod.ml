@@ -112,12 +112,11 @@ let rec slice i k list =
  - : int list = [1; 0; 0; 0; 0; 0]
 [*----------------------------------------------------------------------------*)
 
-(*Še nepreverjena funkcija*)
 let rec insert x k list =
   match x, k, list with
   |x, 0, list -> x :: list
   |x, k, list when (k<0) -> x :: list
-  (* |x, k, [] -> ??? *)
+  |x, k, [] -> failwith "List too short"
   |x, k, y :: ys -> y :: insert x (k-1) ys
 
 (*----------------------------------------------------------------------------*]
@@ -128,12 +127,11 @@ let rec insert x k list =
  - : int list = [3; 4; 5; 1; 2]
 [*----------------------------------------------------------------------------*)
 
-(*Še nepreverjena funkcija*)
 let rec rotate n list= 
   match n, list with
   | _, [] -> []
   | 1, x :: xs -> xs @ [x]
-  | n, x :: xs -> rotate (n-1) (xs :: x)
+  | n, x :: xs -> rotate (n-1) (xs @ [x])
 
 (*----------------------------------------------------------------------------*]
  Funkcija [remove x list] iz seznama izbriše vse pojavitve elementa [x].
@@ -142,11 +140,10 @@ let rec rotate n list=
  - : int list = [2; 3; 2; 3]
 [*----------------------------------------------------------------------------*)
 
-(*Še nepreverjena funkcija*)
-let rec remove x list=
-  match x list with
-  |x, y::ys if (x = y) then ys else y :: remove x ys
-
+let rec remove x = function
+  | [] -> []
+  | y :: ys when y = x -> remove x ys
+| y :: ys -> y :: remove x ys
 
 (*----------------------------------------------------------------------------*]
  Funkcija [is_palindrome] za dani seznam ugotovi ali predstavlja palindrom.
@@ -158,7 +155,18 @@ let rec remove x list=
  - : bool = false
 [*----------------------------------------------------------------------------*)
 
-let rec is_palindrome = ()
+let is_palindrome list =
+   let rec aux l0 l1 =
+       match (l0, l1) with
+       | _,[] -> (true,[])
+       | hd :: tl, [x] -> (hd = x, tl)
+       | _, hd1 :: tl1 -> let (pal, ll) = aux l0 tl1 in
+             match ll with
+             | [] -> (pal, [])
+             | hd::tl -> (pal && hd1 = hd, tl) in
+   match list with
+   [] -> true
+   | _ -> fst (aux list list)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [max_on_components] sprejme dva seznama in vrne nov seznam, katerega
@@ -169,7 +177,15 @@ let rec is_palindrome = ()
  - : int list = [5; 4; 3; 3; 4]
 [*----------------------------------------------------------------------------*)
 
-let rec max_on_components = ()
+let rec max_on_components seznam1 seznam2 = 
+  match seznam1, seznam2 with
+  | x :: xs, y :: ys ->
+    if (x >= y) then
+      x :: max_on_components xs ys
+    else
+      y :: max_on_components xs ys
+  | [], _ -> []
+  | _, [] -> []
 
 (*----------------------------------------------------------------------------*]
  Funkcija [second_largest] vrne drugo največjo vrednost v seznamu. Pri tem se
@@ -181,4 +197,15 @@ let rec max_on_components = ()
  - : int = 10
 [*----------------------------------------------------------------------------*)
 
-let rec second_largest = ()
+let max l = 
+  match l with
+  [] -> failwith "None"
+  |h::t ->  let rec helper (seen,rest) =
+              match rest with 
+              [] -> seen
+              |h'::t' -> let seen' = if h' > seen then h' else seen in 
+                         let rest' = t'
+              in helper (seen',rest')
+            in helper (h,t) 
+
+let rec second_largest seznam = max (remove (max seznam) seznam)
