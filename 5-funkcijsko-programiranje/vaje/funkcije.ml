@@ -211,7 +211,13 @@ let rec fold_left_no_acc f xs =
  - : int list = []
 [*----------------------------------------------------------------------------*)
 
-let rec apply_sequence = ()
+let rec apply_sequence f x n =
+  let rec apply_sequence' acc f x n =
+    if n < 0 then
+      acc
+    else
+      apply_sequence' (f x :: acc) f (f x) (n - 1)
+  in reverse(apply_sequence' [] f x n)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [filter f list] vrne seznam elementov [list], pri katerih funkcija [f]
@@ -221,7 +227,14 @@ let rec apply_sequence = ()
  - : int list = [4; 5]
 [*----------------------------------------------------------------------------*)
 
-let rec filter = ()
+let rec filter f seznam =
+  match seznam with
+  | [] -> []
+  | x :: xs ->
+    if f x = true then
+      x :: filter f xs
+    else
+      filter f xs
 
 (*----------------------------------------------------------------------------*]
  Funkcija [exists] sprejme seznam in funkcijo, ter vrne vrednost [true] čim
@@ -233,8 +246,14 @@ let rec filter = ()
  # exists ((<)8) [0; 1; 2; 3; 4; 5];;
  - : bool = false
 [*----------------------------------------------------------------------------*)
-
-let rec exists = ()
+(*ni še repno rekurzivna*)
+let rec exists f seznam =
+  match seznam with
+  | [] -> false
+  | x :: xs ->
+    if f x = true then
+      true
+    else exists f xs
 
 (*----------------------------------------------------------------------------*]
  Funkcija [first f default list] vrne prvi element seznama, za katerega
@@ -246,5 +265,11 @@ let rec exists = ()
  # first ((<)8) 0 [1; 1; 2; 3; 5; 8];;
  - : int = 0
 [*----------------------------------------------------------------------------*)
-
-let rec first = ()
+(*ni še repno rekurzivna*)
+let rec first f default seznam =
+  match seznam with
+  | [] -> default
+  | x :: xs ->
+    if f x = true then
+      x
+    else first f default xs
