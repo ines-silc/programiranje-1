@@ -114,8 +114,9 @@ let rec map_tree f tree =
 let rec list_of_tree tree=
     let rec list' acc tree =
         match tree with
-        | Empty -> []
-        | Node(lt, x, rt) -> ()
+        | Empty -> acc
+        | Node(levi, x, desni) -> list' (x :: acc) levi @ list' [] desni
+    in list' [] tree
 
 (*----------------------------------------------------------------------------*]
  Funkcija [is_bst] preveri ali je drevo binarno iskalno drevo (Binary Search 
@@ -128,6 +129,22 @@ let rec list_of_tree tree=
  - : bool = false
 [*----------------------------------------------------------------------------*)
 
+let rec urejen seznam = 
+    match seznam with
+    | [] -> true
+    | x :: [] -> true
+    | x :: y :: [] ->
+      if x <= y then
+        true
+      else 
+        false
+    | x :: y :: xs ->
+      if x <= y then
+        urejen (y :: xs)
+      else 
+        false
+
+let rec is_bst tree = urejen (list_of_tree tree) 
 
 (*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*]
  V nadaljevanju predpostavljamo, da imajo dvojiška drevesa strukturo BST.
@@ -143,6 +160,25 @@ let rec list_of_tree tree=
  - : bool = false
 [*----------------------------------------------------------------------------*)
 
+let rec member element tree =
+    let rec member' element = function
+    | [] -> false
+    | x :: xs ->
+        if element = x then
+            true
+        else member' element xs
+    in member' element (list_of_tree tree)
+
+let rec insert element tree=
+    match tree with
+    | Empty -> Node(Empty, element, Empty)
+    | Node(levi, x, desni) ->
+        if element < x then
+            let novi_levi = insert element levi in
+            Node(novi_levi, x, desni)
+        else
+            let novi_desni = insert element desni in
+            Node(levi, x, novi_desni)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [member2] ne privzame, da je drevo bst.
@@ -150,6 +186,8 @@ let rec list_of_tree tree=
  Opomba: Premislte kolikšna je časovna zahtevnost funkcije [member] in kolikšna
  funkcije [member2] na drevesu z n vozlišči, ki ima globino log(n). 
 [*----------------------------------------------------------------------------*)
+
+let rec member2 element tree = ()
 
 
 (*----------------------------------------------------------------------------*]
@@ -165,6 +203,37 @@ let rec list_of_tree tree=
  - : int option = None
 [*----------------------------------------------------------------------------*)
 
+let rec minimum tree=
+    let rec minimum' tree=
+        match tree with
+        | [] -> failwith "Prazno drevo"
+        | x :: [] -> x
+        | x :: xs -> min x (minimum' xs)
+    in minimum' (list_of_tree tree)
+
+let rec lepi_minimum tree =
+    match tree with
+    | Empty -> failwith "Prazno drevo"
+    | Node(Empty, x, desno) -> Some x
+    | Node(levi, x, desni) -> lepi_minimum levi
+
+let rec succ tree=
+    match tree with
+       | Empty -> failwith "Prazno drevo"
+       | Node(levi, x, Empty)-> failwith "Ni večjega elementa"
+       | Node(levi, x, desni) -> lepi_minimum desni
+
+let rec lepi_maksimum tree =
+    match tree with
+        | Empty -> failwith "Prazno drevo"
+        | Node(Empty, x, desno) -> Some x
+        | Node(levi, x, desni) -> lepi_maksimum levi
+
+let rec pred tree=
+    match tree with
+        | Empty -> failwith "Prazno drevo"
+        | Node(Empty, x, desni)-> failwith "Ni večjega elementa"
+        | Node(levi, x, desni) -> lepi_maksimum desni
 
 (*----------------------------------------------------------------------------*]
  Na predavanjih ste omenili dva načina brisanja elementov iz drevesa. Prvi 
@@ -179,6 +248,21 @@ let rec list_of_tree tree=
  Node (Node (Empty, 6, Empty), 11, Empty))
 [*----------------------------------------------------------------------------*)
 
+let rec delete x tree=
+    match tree with
+    | Empty -> Empty
+    | Node(Empty, y, Empty) ->
+        if x = y then Empty else tree
+    | Node(Empty, y, ys) when x = y -> ys
+    | Node(ys, y, Empty) when x = y -> ys
+    | Node(lt, y, rt) when x <> y ->
+        if x > y then
+            Node(lt, y ,delete x rt)
+        else Node(delete x lt, y, rt)
+    | Node(lt, y, rt) ->(* SUPER FUN CASE :D *)
+        match succ tree with
+        |None -> failwith "HOW IS THIS POSSIBLE"
+        |Some z -> Node(lt, z, delete z rt)
 
 (*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*]
  SLOVARJI
@@ -201,6 +285,12 @@ let rec list_of_tree tree=
      "c":-2
 [*----------------------------------------------------------------------------*)
 
+type ('key, 'value) dict = ('key * 'value) tree
+
+let test_dict = 
+    let desno = Node(leaf ("c", -2), leaf ("d", 2), Empty) in
+    let levo = Node(Empty, leaf ("a", 0), Empty) in
+    Node(levo, leaf ("b", 1), desno)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [dict_get key dict] v slovarju poišče vrednost z ključem [key]. Ker
@@ -211,6 +301,8 @@ let rec list_of_tree tree=
  # dict_get "c" test_dict;;
  - : int option = Some (-2)
 [*----------------------------------------------------------------------------*)
+
+let rec dict_get key dict = ()
 
       
 (*----------------------------------------------------------------------------*]
