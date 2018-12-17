@@ -302,7 +302,15 @@ let test_dict =
  - : int option = Some (-2)
 [*----------------------------------------------------------------------------*)
 
-let rec dict_get key dict = ()
+let rec dict_get key dict = 
+    match dict with
+    | Empty -> None
+    | Node(levi, (k, v), desni) when k = key -> Some v
+    | Node(levi, (k, v), desni) ->
+        if k > key then
+            dict_get key levi
+        else
+            dict_get key desni
 
       
 (*----------------------------------------------------------------------------*]
