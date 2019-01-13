@@ -178,6 +178,13 @@ let swap tabela i j =
  index_min [|0; 2; 9; 3; 6|] 2 4 = 4
 [*----------------------------------------------------------------------------*)
 
+let index_min a lower upper =
+  let index_min = ref lower in
+  for i = lower to upper do
+    if a.(i) < a.(!index_min) then
+      index_min := i
+  done;
+  !index_min
 
 (*----------------------------------------------------------------------------*]
  Funkcija [selection_sort_array] implementira urejanje z izbiranjem na mestu. 
@@ -186,3 +193,16 @@ let swap tabela i j =
  skupaj z [randlist].
 [*----------------------------------------------------------------------------*)
 
+let selection_sort_array a =
+  let index_end = Array.length a - 1 in
+  (* Every step moves boundary_sorted one place to the right. *)
+  for boundary_sorted = 0 to index_end do
+    let i = index_min a boundary_sorted index_end in
+    swap a i boundary_sorted
+  done
+
+let selection_sort_list list =
+  (* For testing purposes. *)
+  let a = Array.of_list list in
+  selection_sort_array a;
+  Array.to_list a

@@ -30,7 +30,7 @@
 def pivot(a, start, end):
     pivot = a[start]
     if start >= end:
-        passž
+        pass
     for i in range(end-start):
         for j in range(i+1, end-start+1):
             if a[start + i] >= pivot:
@@ -54,7 +54,7 @@ def pivot(a, start, end):
 
 def quicksort_part(a, start, end):
     if start >= end:
-        return a
+        return
     else:
         p = pivot(a, start, end)
         quicksort_part(a, start, p-1)
@@ -78,16 +78,20 @@ def quicksort(a):
 # jo rešite brez da v celoti uredite tabelo [a].
 ##############################################################################
 
-def kth(a, k, start, end):
-    if start == end:
-        return a[0]
-    l = pivot(a, 0, len(a)-1)
-    if k == l:
-        a[l]
-    elif k < l:
-        kth_element(a[:l], k)
-    else:
-        kth_element(a[l:], k-l) 
-
 def kth_element(a, k):
-    return kth(a, k, 0, len(a)-1)
+    element = pivot(a, 0, len(a) - 1)
+    if element == k: #iskani element je ravno nas zacetni pivot
+        print("nasel sem element, ki je {}".format(a[element]))
+        return a[element]
+    elif element > k: #iskani element je levo od pivota
+        nov_seznam = a[:element]
+        quicksort(nov_seznam)
+        return nov_seznam[k]
+    else:
+        nov_seznam = a[(element + 1):]
+        quicksort(nov_seznam)
+    return nov_seznam[(k - element - 1)]
+
+
+a = [10, 4, 5, 15, 11, 3, 17, 2, 18]
+print(kth_element(a, 3))

@@ -9,23 +9,26 @@
             "command": "python",
             "args": [
                 "-i",
-               {
-                 "value": "${file}",
-                 "quoting": "escape"
-               }
-            ]
-        }
-        ,
+                {
+                    "value": "${file}",
+                    "quoting": "escape"
+                }
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
         {
             "label": "run file in ocaml",
             "type": "shell",
             "command": "ocaml",
             "args": [
                 "-init",
-               {
-                 "value": "${file}",
-                 "quoting": "escape"
-               }
+                {
+                    "value": "${file}",
+                    "quoting": "escape"
+                }
             ]
         }
     ]
