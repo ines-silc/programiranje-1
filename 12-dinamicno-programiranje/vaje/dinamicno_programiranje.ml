@@ -16,10 +16,38 @@
  - : int = 13
 [*----------------------------------------------------------------------------*)
 
+let memoiziraj_rec odviti_f =
+  let rezultati = Hashtbl.create 512 in
+  let rec mem_f x =
+    if Hashtbl.mem rezultati x then
+      Hashtbl.find rezultati x
+    else
+      let y = odviti_f x in
+      Hashtbl.add rezultati x y;
+      y
+  in
+  mem_f
+
 let test_matrix = 
   [| [| 1 ; 2 ; 0 |];
      [| 2 ; 4 ; 5 |];
      [| 7 ; 0 ; 1 |] |]
+
+let rec max_cheese cheese_matrix=
+  let max_r = Array.length cheese_matrix in 
+  let max_c = Array.length cheese_matrix.(0) in 
+
+  let max_cheese' recursive max_cheese' (r, c)=
+    if r >= max_r || c >= max_c then 0
+    else
+      let right = recursive max_cheese' (r, c+1) in 
+      let down = recursive max_cheese' (r+1, c) in
+      let our_cheese = cheese_matrix.(r).(c) in 
+      our_cheese + max right down
+  in
+  let memoised_max_cheese = memoiziraj_rec max_cheese' in memoised_max_cheese (0, 0)
+
+
 
 (*----------------------------------------------------------------------------*]
  Rešujemo problem sestavljanja alternirajoče obarvanih stolpov. Imamo štiri
