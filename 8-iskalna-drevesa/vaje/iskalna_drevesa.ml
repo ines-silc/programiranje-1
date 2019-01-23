@@ -349,3 +349,9 @@ let rec dict_get key dict =
  - : unit = ()
 [*----------------------------------------------------------------------------*)
 
+let rec dict_insert key value dict =
+    match dict with
+    |Empty -> Node(Empty, (key, value, Empty)
+    |Node(x, (k, y), z) when k = key -> Node(x, (key, value), z)
+    |Node(x, (k, y), z) when k > key -> Node(dict_insert key value x, (k, y), z)
+    |Node(x, (k, y), z) when k < key -> Node(x, (k, y), dict_insert key value z)
